@@ -14,5 +14,48 @@ document.addEventListener('DOMContentLoaded', () => {
         newPost.entry = entry;
         document.querySelector('main').appendChild(newPost);
       });
+      ClickEvents();
     });
 });
+
+let settings = document.querySelector('img');
+settings.addEventListener('click', () =>{
+  if(history.state != null){
+    if(history.state.state == 'settings'){
+      //do nothing
+    }else{
+      var events = {
+        state: 'settings'
+      }
+      setState(events,0,-1);
+    }
+  }else{
+    var events = {
+      state: 'settings'
+    }
+    setState(events,0,-1);
+  }
+  
+});
+
+function ClickEvents(){
+  let JEntries = document.querySelector('main').childNodes;
+  for(var i = 0; i < JEntries.length; i++){
+    let event = JEntries[i];
+    event.setAttribute('journal-number', i+1);
+    event.addEventListener('click', () => {
+      var events = {
+        state:'single-entry',
+        JEnt: event.entry
+      }
+      console.log("Clicked Journal Entry Number " + event.getAttribute('journal-number'));
+      setState(events,0,event.getAttribute('journal-number'));
+    });
+  }
+}
+
+window.addEventListener('popstate', (event) => {
+  setState(event.state,1);
+});
+
+
