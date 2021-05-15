@@ -5,7 +5,7 @@ export const router = {};
 /**
  * Changes the "page" (state) that your SPA app is currently set to
  */
-router.setState = function() {
+router.setState = function(JournalEntry,number,JNumber) {
   /**
    * - There are three states that your SPA app will have
    *    1. The home page
@@ -35,4 +35,56 @@ router.setState = function() {
    *    1. You may add as many helper functions in this file as you like
    *    2. You may modify the parameters of setState() as much as you like
    */
+    if(number == 0){
+    let url = new URL(window.location);
+    if(JNumber < 0){
+      JournalEntry.url = url+'#settings';
+      JournalEntry.title = 'Settings'
+    }else{
+      JournalEntry.url = url+'#entry'+JNumber;
+      JournalEntry.title = 'Entry ' + JNumber;
+    }
+    history.pushState(JournalEntry, '', JournalEntry.url);
+    if(JournalEntry != null){
+      if(JournalEntry.JEnt != null){
+        let entryJSON = JournalEntry.JEnt;
+        let JEntry = document.querySelector('entry-page');
+        JEntry.remove();
+        let newJournal = document.createElement('entry-page');
+        newJournal.entry = entryJSON;
+        document.querySelector('body').appendChild(newJournal);
+        document.querySelector('h1').innerHTML = JournalEntry.title;
+      } 
+      if(JournalEntry.state == null){
+        document.querySelector('body').removeAttribute("class");
+      }else{
+        document.querySelector('body').setAttribute("class", JournalEntry.state);
+        document.querySelector('h1').innerHTML = JournalEntry.title;
+      }
+    }else{
+      document.querySelector('body').removeAttribute("class");
+    }
+  }
+  if(number == 1){
+    if(JournalEntry != null){
+      if(JournalEntry.JEnt != null){
+        let entryJSON = JournalEntry.JEnt;
+        let JEntry = document.querySelector('entry-page');
+        JEntry.remove();
+        let newJournal = document.createElement('entry-page');
+        newJournal.entry = entryJSON;
+        document.querySelector('body').appendChild(newJournal);
+      } 
+      if(JournalEntry.state == null){
+        document.querySelector('body').removeAttribute("class");
+        document.querySelector('h1').innerHTML = "Journal Entries";
+      }else{
+        document.querySelector('body').setAttribute("class", JournalEntry.state);
+      }
+    }else{
+      document.querySelector('body').removeAttribute("class");
+      document.querySelector('h1').innerHTML = "Journal Entries";
+    }
+  }
+  
 }
